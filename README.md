@@ -12,11 +12,26 @@ yarn dev
 pnpm dev
 ```
 
+## Building titles DB
+
+* Download title.basics.tsv.gz from [IMDB](https://datasets.imdbws.com/title.basics.tsv.gz)
+* Unzip it
+* Run `tr '"' "'" < title.basics.tsv > title.basics.fixed.tsv`
+* Run `sqlite3` then run the following commands to create a sqlite3 database:
+```
+.mode tabs
+.import title.basics.fixed.tsv titles
+.save title_basics.db
+create table title_ratings (tconst TEXT NOT NULL PRIMARY KEY, averageRating REAL, numVotes INTEGER);
+.import title.ratings.tsv title_ratings
+.save title_ratings.db
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/search.ts`.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
