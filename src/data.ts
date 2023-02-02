@@ -1,6 +1,6 @@
 import { Title, TitleRating } from "@/interfaces";
 import sqlite3 from "sqlite3";
-import { reverse, sortBy } from "lodash";
+import { sortBy } from "lodash";
 
 const titlesDb = new sqlite3.Database("./title_basics.db");
 const titleRatingsDb = new sqlite3.Database("./title_ratings.db");
@@ -11,7 +11,7 @@ const RATINGS_QUERY = `SELECT *
                        from title_ratings
                        WHERE tconst = ? LIMIT 1`;
 
-const ratingsSearch: (titleId: string) => Promise<TitleRating> = (titleId) => {
+const ratingsSearch: (titleId: string) => Promise<TitleRating | undefined> = (titleId) => {
   return new Promise((resolve) => {
     titleRatingsDb.get(RATINGS_QUERY, titleId, (err, row) => {
       if (err) throw err;

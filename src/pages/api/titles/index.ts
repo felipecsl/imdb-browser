@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { searchTitles } from "../../../data";
-import type { ResponseError, Title } from "../../../interfaces";
+import { searchTitles } from "@/data";
+import type { ResponseError, Title } from "@/interfaces";
 
 export default async function titleHandler(
   req: NextApiRequest,
