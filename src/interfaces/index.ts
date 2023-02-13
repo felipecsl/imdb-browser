@@ -16,6 +16,16 @@ export type TitleRating = {
   numVotes: number;
 };
 
+export type TitleMetadata = {
+  tconst: string;
+  overview: string;
+  posterPath: string;
+  backdropPath: string;
+  originalLanguage: string;
+}
+
+export type TitleWithMetadata = Title & TitleRating & TitleMetadata;
+
 export type ResponseError = {
   message: string;
 };

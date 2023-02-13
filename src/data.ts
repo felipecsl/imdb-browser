@@ -1,26 +1,21 @@
-import { Title, TitleRating } from "@/interfaces";
+import { TitleWithMetadata } from "@/interfaces";
 import sqlite3 from "sqlite3";
 import { sortBy } from "lodash";
 
-const titlesDb = new sqlite3.Database("./title_basics.db");
-const titleRatingsDb = new sqlite3.Database("./title_ratings.db");
-const TITLE_QUERY = `SELECT *
-                     FROM titles
-                     WHERE originalTitle LIKE ?`;
-const RATINGS_QUERY = `SELECT *
-                       from title_ratings
-                       WHERE tconst = ? LIMIT 1`;
+const titlesDb = new sqlite3.Database("./titles.db");
+const TITLE_QUERY = `SELECT titles.*, 
+                            title_ratings.averageRating, 
+                            title_ratings.numVotes,
+                            title_metadata.overview,
+                            title_metadata.poster_path as posterPath,
+                            title_metadata.backdrop_path as backdropPath
+                    FROM titles
+                    JOIN title_metadata, title_ratings
+                      ON title_metadata.tconst = titles.tconst 
+                      AND title_ratings.tconst = titles.tconst
+                    WHERE originalTitle LIKE ?`;
 
-const ratingsSearch: (titleId: string) => Promise<TitleRating | undefined> = (titleId) => {
-  return new Promise((resolve) => {
-    titleRatingsDb.get(RATINGS_QUERY, titleId, (err, row) => {
-      if (err) throw err;
-      resolve(row);
-    });
-  });
-};
-
-const titleSearch: (query: string) => Promise<Title[]> = (query) => {
+const titleSearch: (query: string) => Promise<TitleWithMetadata[]> = (query) => {
   return new Promise((resolve) => {
     titlesDb.all(TITLE_QUERY, `%${query}%`, (err, rows) => {
       if (err) throw err;
@@ -29,20 +24,10 @@ const titleSearch: (query: string) => Promise<Title[]> = (query) => {
   });
 };
 
-const searchTitles = async (query: string) => {
+// Returns titles sorted by highest rating first
+const searchTitles: (query: string) => Promise<TitleWithMetadata[]> = async (query: string) => {
   const titles = await titleSearch(query);
-  const titlesWithRatings = await Promise.all(
-    titles.map(async (title) => {
-      const titleRatings = await ratingsSearch(title.tconst);
-      if (titleRatings) {
-        const { averageRating, numVotes } = titleRatings;
-        return { ...title, averageRating, numVotes };
-      } else {
-        return { ...title, averageRating: 0, numVotes: 0 };
-      }
-    })
-  );
-  return sortBy(titlesWithRatings, (t) => -t.numVotes);
+  return sortBy(titles, (t) => -t.numVotes);
 };
 
 export { searchTitles };

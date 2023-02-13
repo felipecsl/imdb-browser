@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { searchTitles } from "@/data";
-import type { ResponseError, Title } from "@/interfaces";
+import type { ResponseError, Title, TitleWithMetadata } from "@/interfaces";
 
 export default async function titleHandler(
   req: NextApiRequest,
@@ -14,6 +14,6 @@ export default async function titleHandler(
       ? res.status(200).json(titlesFound)
       : res.status(404).json({ message: `Title with query='${q}' not found.` });
   } else {
-    res.status(400).json({ message: `Missing search query` });
+    return res.status(400).json({ message: `Missing search query` });
   }
 }

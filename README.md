@@ -11,14 +11,6 @@ yarn dev
 * Unzip files
 * Run `tr '"' "'" < title.basics.tsv > title.basics.fixed.tsv`
 * Run `sqlite3` then run the following commands to create a sqlite3 database:
-```
-.mode tabs
-.import title.basics.fixed.tsv titles
-.save title_basics.db
-create table title_ratings (tconst TEXT NOT NULL PRIMARY KEY, averageRating REAL, numVotes INTEGER);
-.import title.ratings.tsv title_ratings
-.save title_ratings.db
-```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
