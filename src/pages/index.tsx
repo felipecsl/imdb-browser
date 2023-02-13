@@ -22,6 +22,15 @@ export default function Home() {
         setTotalMatches(r.length);
         setLoading(false);
       });
+    } else {
+      setLoading(true);
+      setResults([]);
+      setTotalMatches(0);
+      fetcher("/api/popular").then((r) => {
+        setResults(r);
+        setTotalMatches(r.length);
+        setLoading(false);
+      });
     }
   }, [query]);
   const onChangeSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +57,6 @@ export default function Home() {
         {loading && <CircularProgress />}
         {results.length > 0 && (
           <div className="my-2">
-            <p className="mb-3">{totalMatches} matches found</p>
             <div className="flex justify-around flex-wrap">
               {results.map(
                 ({ tconst, originalTitle, startYear, posterPath }) => (

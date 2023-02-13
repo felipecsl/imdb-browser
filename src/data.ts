@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import { sortBy } from "lodash";
 
 const titlesDb = new sqlite3.Database("./titles.db");
-const TITLE_QUERY = `SELECT titles.*,
+const BASE_SELECT = `SELECT titles.*,
                             title_ratings.averageRating,
                             title_ratings.numVotes,
                             title_metadata.overview,
@@ -12,11 +12,13 @@ const TITLE_QUERY = `SELECT titles.*,
                      FROM titles
                               JOIN title_metadata,
                           title_ratings ON title_metadata.tconst = titles.tconst 
-                      AND title_ratings.tconst = titles.tconst
-                     WHERE originalTitle LIKE ?`;
+                      AND title_ratings.tconst = titles.tconst`;
+const TITLE_QUERY = `${BASE_SELECT} WHERE originalTitle LIKE ? ORDER BY numVotes DESC`;
+const POPULAR_MOVIES_QUERY = `${BASE_SELECT} WHERE titleType = 'movie' ORDER BY numVotes DESC LIMIT 250`;
 
-const titleSearch: (query: string) => Promise<TitleWithMetadata[]> = (
-  query
+// Returns titles sorted by highest rating first
+const searchTitles: (query: string) => Promise<TitleWithMetadata[]> = async (
+  query: string
 ) => {
   return new Promise((resolve) => {
     titlesDb.all(TITLE_QUERY, `%${query}%`, (err, rows) => {
@@ -26,12 +28,13 @@ const titleSearch: (query: string) => Promise<TitleWithMetadata[]> = (
   });
 };
 
-// Returns titles sorted by highest rating first
-const searchTitles: (query: string) => Promise<TitleWithMetadata[]> = async (
-  query: string
-) => {
-  const titles = await titleSearch(query);
-  return sortBy(titles, (t) => -t.numVotes);
+const popularTitles: () => Promise<TitleWithMetadata[]> = async () => {
+  return new Promise((resolve) => {
+    titlesDb.all(POPULAR_MOVIES_QUERY, (err, rows) => {
+      if (err) throw err;
+      resolve(sortBy(rows, (t) => -t.averageRating));
+    });
+  });
 };
 
 const findTitleById: (id: string) => Promise<TitleWithMetadata | null> = async (
@@ -59,4 +62,4 @@ const findTitleById: (id: string) => Promise<TitleWithMetadata | null> = async (
   });
 };
 
-export { searchTitles, findTitleById };
+export { searchTitles, findTitleById, popularTitles };
