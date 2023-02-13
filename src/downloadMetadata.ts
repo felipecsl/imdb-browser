@@ -9,7 +9,7 @@ import { chunk } from "lodash";
 
 const titlesDb = new sqlite3.Database("./titles.db");
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-const TMDB_API_KEY = "92c052eedef30d352595fabb71e59828";
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const INSERT_QUERY = `INSERT INTO title_metadata
                       VALUES (?, ?, ?, ?, ?, ?, ?)`;
 const agent = new https.Agent({ keepAlive: true });
