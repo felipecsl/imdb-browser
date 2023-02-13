@@ -1,11 +1,6 @@
 ## IMDB title browser
 
-```bash
-yarn install
-yarn dev
-```
-
-This is a work in progress
+This is a work in progress! 🚧
 
 ## Building titles DB
 
@@ -17,6 +12,13 @@ This is a work in progress
   * Create a [TMDB account](https://themoviedb.org) and get an API key
   * Download a daily export of movies and tv series IDs from [this page](https://developers.themoviedb.org/3/getting-started/daily-file-exports)
   * Run `yarn tsc && node dist/download_metadata.js <path to tmdb export> <path to titles.db> <tmdb api key>` (TODO implement this)
+
+## Running the app
+
+```bash
+yarn install
+yarn dev
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to view the app.
 
