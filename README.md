@@ -4,7 +4,7 @@ This is a work in progress! 🚧
 
 ## Building titles DB
 
-* Download [`title.basics.tsv.gz`]((https://datasets.imdbws.com/title.basics.tsv.gz)) and [`title.ratings.tsv.gz`](https://datasets.imdbws.com/title.ratings.tsv.gz) from IMDB
+* Download [`title.basics.tsv.gz`](https://datasets.imdbws.com/title.basics.tsv.gz) and [`title.ratings.tsv.gz`](https://datasets.imdbws.com/title.ratings.tsv.gz) from IMDB
 * Unzip files
 * Run `tr '"' "'" < title.basics.tsv > title.basics.fixed.tsv`
 * Run `sqlite3 titles.db < populate_db.sql` to create DB tables and populate with IMDB title and ratings data from TSVs
