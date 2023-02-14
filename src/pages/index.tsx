@@ -59,7 +59,7 @@ export default function Home() {
           <div className="my-2">
             <div className="flex justify-around flex-wrap">
               {results.map(
-                ({ tconst, originalTitle, startYear, posterPath }) => (
+                ({ tconst, primaryTitle, startYear, posterPath }) => (
                   <div
                     key={tconst}
                     className="my-3 mr-3 w-48 inline-block border border-gray-900 rounded-lg bg-gray-700 hover:bg-gray-600 drop-shadow-lg"
@@ -77,7 +77,7 @@ export default function Home() {
                         alt="Movie poster"
                       />
                       <div className="py-4 px-3 text-sm">
-                        {originalTitle.trim()}
+                        {primaryTitle.trim()}
                         <br />
                         {startYear}
                       </div>

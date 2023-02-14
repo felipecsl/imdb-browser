@@ -36,7 +36,7 @@ const Title = () => {
           />
           <div className="flex flex-col">
             <h1 className="text-3xl my-4 font-medium">
-              {title?.originalTitle} ({title?.startYear})
+              {title?.primaryTitle} ({title?.startYear})
             </h1>
             <div className="text-sm mb-1">{title?.genres}</div>
             <div className="mb-10 text-sm">
