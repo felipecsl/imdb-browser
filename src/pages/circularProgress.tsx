@@ -3,9 +3,15 @@ import { isEmpty } from "lodash";
 
 export type CircularProgressProps = {
   text?: string;
+  className?: string;
 };
-const CircularProgress = ({ text = "Loading..." }: CircularProgressProps) => (
-  <div className="bg-gray-900 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white transition ease-in-out duration-150 cursor-not-allowed">
+const CircularProgress = ({
+  text = "Loading...",
+  className,
+}: CircularProgressProps) => (
+  <div
+    className={`bg-gray-900 inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white transition ease-in-out duration-150 cursor-not-allowed ${className}`}
+  >
     <svg
       className={`animate-spin h-5 w-5 text-white ${
         !isEmpty(text) ? "-ml-1 mr-3" : ""

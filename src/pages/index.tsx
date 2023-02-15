@@ -46,15 +46,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1 className="text-3xl my-4 font-medium">Movie Search</h1>
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={debounce(onChangeSearchQuery, 250)}
-          className="border border-gray-600 rounded py-2 px-4 my-2 text-xl text-gray-900"
-        />
-        <br />
-        {loading && <CircularProgress />}
+        <h1 className="text-3xl my-4 font-medium">Movie browser</h1>
+        <div className="flex">
+          <input
+            type="text"
+            placeholder="Search..."
+            onChange={debounce(onChangeSearchQuery, 250)}
+            className="rounded py-2 px-4 text-xl text-gray-900 border border-gray-200 focus:outline-none"
+          />
+          <div className="">
+            {loading && (
+              <CircularProgress
+                text=""
+                className="py-3 border border-gray-200 rounded-r-md rounded-l-none -ml-1"
+              />
+            )}
+          </div>
+        </div>
         {results.length > 0 && (
           <div className="my-2">
             <div className="flex justify-around flex-wrap">
