@@ -52,7 +52,7 @@ const Title = () => {
                 : "/missingImage.svg"
             }
             width="300"
-            className="mr-8 self-center"
+            className="mr-8 self-start rounded-lg drop-shadow-lg"
           />
           <div className="flex flex-col w-[530px] min-h-[480px]">
             <h1 className="text-3xl mt-4 font-medium mb-1">

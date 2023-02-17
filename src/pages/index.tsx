@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import { TitleWithMetadata } from "@/interfaces";
+import { Title, TitleWithMetadata } from "@/interfaces";
 import { take } from "lodash";
 import CircularProgress from "@/pages/circularProgress";
 import Link from "next/link";
@@ -60,33 +60,9 @@ export default function Home() {
         {results.length > 0 && (
           <div className="my-2">
             <div className="flex justify-around flex-wrap">
-              {results.map(
-                ({ tconst, primaryTitle, startYear, posterPath }) => (
-                  <div
-                    key={tconst}
-                    className="my-3 mr-3 w-48 inline-block border border-gray-900 rounded-lg bg-gray-700 hover:bg-gray-600 drop-shadow-lg"
-                  >
-                    <Link
-                      href={`/title/${tconst}`}
-                      className="flex flex-col justify-between h-full"
-                    >
-                      <img
-                        src={
-                          posterPath && posterPath.toLowerCase() !== "null"
-                            ? `https://image.tmdb.org/t/p/w500/${posterPath}`
-                            : "/missingImage.svg"
-                        }
-                        alt="Movie poster"
-                      />
-                      <div className="py-4 px-3 text-sm">
-                        {primaryTitle.trim()}
-                        <br />
-                        {startYear}
-                      </div>
-                    </Link>
-                  </div>
-                )
-              )}
+              {results.map((title) => (
+                <TitleCard key={title.tconst} title={title} />
+              ))}
             </div>
           </div>
         )}
@@ -94,3 +70,30 @@ export default function Home() {
     </div>
   );
 }
+
+const TitleCard = ({ title }: { title: TitleWithMetadata }) => {
+  const { tconst, primaryTitle, startYear, posterPath } = title;
+  return (
+    <div className="my-3 mr-3 w-48 inline-block border dark:border-gray-900 rounded-lg bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-white drop-shadow">
+      <Link
+        href={`/title/${tconst}`}
+        className="flex flex-col justify-between h-full"
+      >
+        <img
+          src={
+            posterPath && posterPath.toLowerCase() !== "null"
+              ? `https://image.tmdb.org/t/p/w500/${posterPath}`
+              : "/missingImage.svg"
+          }
+          alt="Movie poster"
+          className="rounded-t-lg"
+        />
+        <div className="py-4 px-3 text-sm">
+          {primaryTitle.trim()}
+          <br />
+          {startYear}
+        </div>
+      </Link>
+    </div>
+  );
+};
