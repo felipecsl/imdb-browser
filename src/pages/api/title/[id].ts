@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { findTitleById, searchTitles } from "@/data";
 import type { ResponseError, Title, TitleWithMetadata } from "@/interfaces";
 
+const MAX_AGE = 60 * 60 * 24 * 7; // 1 week in seconds
+
 export default async function titleHandler(
   req: NextApiRequest,
   res: NextApiResponse<(TitleWithMetadata & { torrents?: any }) | ResponseError>
@@ -21,7 +23,13 @@ export default async function titleHandler(
         const popcornJson = await popcornData.json();
         torrents = popcornJson?.torrents?.en;
       }
-      res.status(200).json({ ...titleFound, torrents });
+      res
+        .status(200)
+        .setHeader(
+          "Cache-Control",
+          `public, s-maxage=${MAX_AGE}, max-age=${MAX_AGE}, stale-while-revalidate=${MAX_AGE}`
+        )
+        .json({ ...titleFound, torrents });
     } else {
       res.status(404).json({ message: `Title with id='${id}' not found.` });
     }

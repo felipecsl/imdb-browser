@@ -35,7 +35,7 @@ const Title = () => {
   return (
     <div className="dark:bg-gray-800 p-8 min-h-screen dark:text-gray-300">
       <Head>
-        <title>Title details</title>
+        <title>{title?.primaryTitle}</title>
         <meta name="description" content="IMDB search" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -46,10 +46,15 @@ const Title = () => {
       <main className="flex justify-center">
         <div className="flex max-w-4xl">
           <img
-            src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${title?.posterPath}`}
-            className="mr-8"
+            src={
+              title?.posterPath
+                ? `https://image.tmdb.org/t/p/w300_and_h450_bestv2/${title?.posterPath}`
+                : "/missingImage.svg"
+            }
+            width="300"
+            className="mr-8 self-center"
           />
-          <div className="flex flex-col">
+          <div className="flex flex-col w-[530px] min-h-[480px]">
             <h1 className="text-3xl mt-4 font-medium mb-1">
               {title?.primaryTitle}
             </h1>
@@ -60,7 +65,7 @@ const Title = () => {
               </p>
               <div className="">
                 <span className="text-xl font-medium">
-                  {title?.averageRating}
+                  {title?.averageRating ?? "??"}
                 </span>
                 <span className="text-gray-400"> / 10</span> &nbsp;⭐️
               </div>

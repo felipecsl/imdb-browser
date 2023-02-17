@@ -1,42 +1,31 @@
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { TitleWithMetadata } from "@/interfaces";
-import { debounce, take } from "lodash";
+import { take } from "lodash";
 import CircularProgress from "@/pages/circularProgress";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Home() {
-  const [query, setQuery] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [totalMatches, setTotalMatches] = useState(0);
+  const router = useRouter();
+  const query = router.query["q"];
+  const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<TitleWithMetadata[]>([]);
   useEffect(() => {
     if (query) {
-      setLoading(true);
-      setResults([]);
-      setTotalMatches(0);
       fetcher(`/api/titles?q=${query}`).then((r) => {
-        setResults(take(r, 100));
-        setTotalMatches(r.length);
         setLoading(false);
+        setResults(take(r, 100));
       });
     } else {
-      setLoading(true);
-      setResults([]);
-      setTotalMatches(0);
       fetcher("/api/popular").then((r) => {
-        setResults(r);
-        setTotalMatches(r.length);
         setLoading(false);
+        setResults(r);
       });
     }
   }, [query]);
-  const onChangeSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value.length > 3) setQuery(value);
-  };
   return (
     <div className="dark:bg-gray-800 p-8 min-h-screen dark:text-gray-300">
       <Head>
@@ -46,14 +35,19 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1 className="text-3xl my-4 font-medium">Movie browser</h1>
+        <h1 className="text-3xl my-4 font-medium">
+          <Link href="/">Movie browser</Link>
+        </h1>
         <div className="flex">
-          <input
-            type="text"
-            placeholder="Search..."
-            onChange={debounce(onChangeSearchQuery, 250)}
-            className="rounded py-2 px-4 text-xl text-gray-900 border border-gray-200 focus:outline-none"
-          />
+          <form method="get" action="/">
+            <input
+              type="text"
+              name="q"
+              defaultValue={query || ""}
+              placeholder="Search..."
+              className="rounded py-2 px-4 text-xl text-gray-900 border border-gray-200 focus:outline-none"
+            />
+          </form>
           <div className="">
             {loading && (
               <CircularProgress
