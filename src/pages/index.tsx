@@ -5,12 +5,13 @@ import { take } from "lodash";
 import CircularProgress from "@/pages/circularProgress";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import HeaderSection from "@/headerSection";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Home() {
   const router = useRouter();
-  const query = router.query["q"];
+  const query = router.query["q"] as string;
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<TitleWithMetadata[]>([]);
   useEffect(() => {
@@ -35,28 +36,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1 className="text-3xl my-4 font-medium">
-          <Link href="/">Movie browser</Link>
-        </h1>
-        <div className="flex">
-          <form method="get" action="/">
-            <input
-              type="text"
-              name="q"
-              defaultValue={query || ""}
-              placeholder="Search..."
-              className="rounded py-2 px-4 text-xl text-gray-900 border border-gray-200 focus:outline-none"
-            />
-          </form>
-          <div className="">
-            {loading && (
-              <CircularProgress
-                text=""
-                className="py-3 border border-gray-200 rounded-r-md rounded-l-none -ml-1"
-              />
-            )}
-          </div>
-        </div>
+        <HeaderSection loading={loading} query={query} />
         {results.length > 0 && (
           <div className="my-2">
             <div className="flex justify-around flex-wrap">

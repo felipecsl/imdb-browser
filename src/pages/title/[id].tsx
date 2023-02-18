@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { TitleWithMetadata } from "@/interfaces";
 import { sortBy } from "lodash";
 import Link from "next/link";
+import HeaderSection from "@/headerSection";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -24,10 +25,10 @@ const Title = () => {
     }
   }, [id]);
 
-  const hasSeedsAndPeers = ([_, v]: [string, any]) => v.seed > 0 && v.peer > 0;
+  const hasSeeds = ([_, v]: [string, any]) => v.seed > 0;
   const sortedTorrents = title?.torrents
     ? sortBy(
-        Object.entries(title.torrents).filter(hasSeedsAndPeers),
+        Object.entries(title.torrents).filter(hasSeeds),
         ([_, v]) => -v.seed
       )
     : [];
@@ -40,9 +41,7 @@ const Title = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 className="text-3xl my-4 font-medium">
-        <Link href="/">Movie browser</Link>
-      </h1>
+      <HeaderSection loading={loading} />
       <main className="flex justify-center">
         <div className="flex max-w-4xl">
           <img
