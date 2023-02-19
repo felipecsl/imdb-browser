@@ -3,7 +3,6 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { TitleWithMetadata } from "@/interfaces";
 import { sortBy } from "lodash";
-import Link from "next/link";
 import HeaderSection from "@/headerSection";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -24,14 +23,6 @@ const Title = () => {
       });
     }
   }, [id]);
-
-  const hasSeeds = ([_, v]: [string, any]) => v.seed > 0;
-  const sortedTorrents = title?.torrents
-    ? sortBy(
-        Object.entries(title.torrents).filter(hasSeeds),
-        ([_, v]) => -v.seed
-      )
-    : [];
 
   return (
     <div className="dark:bg-gray-800 p-8 min-h-screen dark:text-gray-300">
@@ -54,45 +45,80 @@ const Title = () => {
             className="mr-8 self-start rounded-lg drop-shadow-lg"
           />
           <div className="flex flex-col w-[530px] min-h-[480px]">
-            <h1 className="text-3xl mt-4 font-medium mb-1">
-              {title?.primaryTitle}
-            </h1>
-            <div className="flex justify-between mb-10">
-              <p className="text-sm text-gray-400">
-                {title?.startYear} &bull; {title?.genres} &bull;{" "}
-                {title?.runtimeMinutes} minutes
-              </p>
-              <div className="">
-                <span className="text-xl font-medium">
-                  {title?.averageRating ?? "??"}
-                </span>
-                <span className="text-gray-400"> / 10</span> &nbsp;⭐️
+            <div className="flex justify-between mb-1">
+              <h1 className="text-3xl font-medium">{title?.primaryTitle}</h1>
+              <div className="mt-2">
+                <TitleRating rating={title?.averageRating} />
               </div>
+            </div>
+            <p className="text-sm text-gray-400 mb-3">
+              {title?.startYear} &bull; {title?.runtimeMinutes} minutes
+            </p>
+            <div className="mb-8">
+              <TitleGenres genres={title?.genres.split(",")} />
             </div>
             <h2 className="text-2xl">Overview</h2>
             <p className="mt-4 mb-10">{title?.overview}</p>
-            <h2 className="text-2xl">Media</h2>
-            <div className="flex justify-between my-4">
-              {title?.torrents &&
-                sortedTorrents.map(([res, details]) => (
-                  <div key={details.url} className="mb-3">
-                    <a href={details.url} className="">
-                      <div className="text-lg">{res}</div>
-                    </a>
-                    <span className="text-sm">
-                      Seeds: {details.seed}
-                      <br />
-                      Peers: {details.peer}
-                      <br />
-                      Size: {details.filesize}
-                    </span>
-                  </div>
-                ))}
-            </div>
+            <TitleMedia torrents={title?.torrents} />
           </div>
         </div>
       </main>
     </div>
+  );
+};
+
+const TitleGenres = ({ genres }: { genres?: string[] }) => {
+  return (
+    <div className="flex">
+      {genres?.map((g) => (
+        <div
+          key="g"
+          className="px-3 py-1 rounded-full border border-gray-500 text-xs mr-2 bg-gray-900"
+        >
+          {g}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const TitleMedia = ({ torrents }: { torrents?: { [_: string]: any } }) => {
+  const hasSeeds = ([_, v]: [string, any]) => v.seed > 0;
+  const sortedTorrents = torrents
+    ? sortBy(Object.entries(torrents).filter(hasSeeds), ([_, v]) => -v.seed)
+    : [];
+  return (
+    <>
+      {torrents && <h2 className="text-2xl">Media</h2>}
+      <div className="flex justify-around my-4">
+        {torrents &&
+          sortedTorrents.map(([res, details]) => (
+            <div key={details.url} className="mb-3">
+              <a href={details.url}>
+                <div className="text-lg font-bold text-green-500">{res}</div>
+              </a>
+              <span className="text-sm">
+                Seeds: {details.seed}
+                <br />
+                Peers: {details.peer}
+                <br />
+                Size: {details.filesize}
+              </span>
+            </div>
+          ))}
+      </div>
+    </>
+  );
+};
+
+const TitleRating = ({ rating }: { rating?: number }) => {
+  return (
+    <>
+      <span className="text-2xl font-medium dark:text-white">
+        ⭐️&nbsp;{rating ?? "??"}
+      </span>
+      <span className="text-gray-400"> /10</span>
+    </>
   );
 };
 
