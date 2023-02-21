@@ -13,7 +13,7 @@ const BASE_SELECT = `SELECT titles.*,
                               JOIN title_metadata,
                           title_ratings ON title_metadata.tconst = titles.tconst 
                       AND title_ratings.tconst = titles.tconst`;
-const TITLE_QUERY = `${BASE_SELECT} WHERE originalTitle LIKE ? ORDER BY numVotes DESC`;
+const TITLE_QUERY = `${BASE_SELECT} WHERE primaryTitle LIKE ? ORDER BY numVotes DESC`;
 const POPULAR_MOVIES_QUERY = `${BASE_SELECT} WHERE titleType = 'movie' ORDER BY numVotes DESC LIMIT 250`;
 
 // Returns titles sorted by highest rating first
